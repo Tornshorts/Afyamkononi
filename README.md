@@ -5,7 +5,7 @@
 1. **Clone the repository**
 
    ```sh
-   git clone <repository-url>
+   git clone https://github.com/Tornshorts/Afyamkononi
    cd Afyamkononi
    ```
 
@@ -43,15 +43,28 @@
 
 2. **Run the application**
 
-   ```sh
-   flask run
-   ```
+- Set up database
 
-   _(Replace `main.py` with your project's entry point if different.)_
+  ```sh
+  flask db init
+  ```
+
+  ```sh
+  flask db migrate
+  ```
+
+  ```sh
+  flask db upgrade
+  ```
+
+- Run it
+  ```sh
+  flask run
+  ```
 
 3. **Build Tailwind CSS**
-   - If using the CLI directly:
+
+   - Open another terminal :
      ```sh
      tailwindcss -i ./src/input.css -o ./static/css/output.css --watch
      ```
-     _(Adjust input/output paths as needed for your project structure.)_
