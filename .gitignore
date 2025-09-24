@@ -1,0 +1,5 @@
+.env
+__pycache__/
+venv/
+app.db
+app/static/css/style.css

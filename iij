@@ -1,0 +1,40 @@
+@app.route('/chat', methods=['GET', 'POST'])
+@login_required
+def chat():
+    response = None
+    if request.method == 'POST':
+        user_input = request.form['prompt']
+        GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
+        headers = {
+            "Authorization": f"Bearer {GROQ_API_KEY}",
+            "Content-Type": "application/json"
+        }
+        data = {
+            "model": "llama-3.3-70b-versatile", #  model="llama-3.3-70b-versatile",
+            "messages": [
+                {"role": "system", "content": "You are a helpful assistant."},
+                {"role": "user", "content": user_input}
+            ]
+        }
+        try:
+            res = requests.post("https://api.groq.com/openai/v1/chat/completions", headers=headers, json=data)
+            res.raise_for_status()
+            response = res.json()['choices'][0]['message']['content']
+        except requests.exceptions.HTTPError:
+            # Print error details for debugging
+            response = f"Error: {res.status_code} - {res.text}"
+        except Exception as e:
+            response = f"Error: {str(e)}"
+    return render_template('chat.html', response=response)
+
+
+    2. Facility Locator  
+Uses geolocation and health system data to direct users to the nearest health facility. 
+3. SHA Claims Guidance
+Offers step-by-step explanations of how to use the new Social Health Authority (SHA)
+model, helping patients understand contributions, entitlements, and claim procedures.
+4. Maternal & Child Health Support
+Sends reminders for antenatal visits, immunizations, and postnatal care, while also
+supporting appointment scheduling.  
+5. Basic Health Education
+Provides trusted health information on nutrition, hygiene, reproductive health, and during gestation 

@@ -1,0 +1,131 @@
+{% extends "base.html" %} {% block content %}
+<div class="container mt-4">
+  <h2 class="mb-3 text-2xl font-bold text-purple-700">Nearest Hospitals</h2>
+
+  <!-- Map -->
+  <div
+    id="map"
+    class="mb-6"
+    style="height: 70vh; width: 100%; border-radius: 10px"
+  ></div>
+
+  <!-- List of facilities -->
+  <div id="facility-list" class="bg-white shadow rounded-lg p-4">
+    <h3 class="text-lg font-semibold mb-3">Hospitals Around You</h3>
+    <ul id="facilities" class="space-y-3 text-gray-700"></ul>
+  </div>
+</div>
+
+<script>
+  let map;
+
+  function initMap() {
+    const defaultLocation = { lat: -1.286389, lng: 36.817223 }; // Nairobi center
+    map = new google.maps.Map(document.getElementById("map"), {
+      center: defaultLocation,
+      zoom: 14,
+    });
+
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const userLocation = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          };
+          map.setCenter(userLocation);
+
+          // Use AdvancedMarkerElement for user location
+          new google.maps.marker.AdvancedMarkerElement({
+            map: map,
+            position: userLocation,
+            title: "You are here",
+            content: (() => {
+              const div = document.createElement("div");
+              div.style.background = "blue";
+              div.style.borderRadius = "50%";
+              div.style.width = "20px";
+              div.style.height = "20px";
+              div.style.border = "2px solid white";
+              div.title = "You are here";
+              return div;
+            })(),
+          });
+
+          // Use the new Place API
+          const place = new google.maps.places.Place();
+          place.searchNearby(
+            {
+              location: userLocation,
+              radius: 5000,
+              type: "hospital",
+            },
+            (results, status) => {
+              if (status === "OK" && Array.isArray(results)) {
+                const facilityList = document.getElementById("facilities");
+                facilityList.innerHTML = ""; // Clear list first
+
+                results.forEach((placeResult) => {
+                  // Add AdvancedMarkerElement for hospital
+                  const marker = new google.maps.marker.AdvancedMarkerElement({
+                    map: map,
+                    position: placeResult.geometry.location,
+                    title: placeResult.name,
+                    content: (() => {
+                      const div = document.createElement("div");
+                      div.style.background = "#9333ea";
+                      div.style.borderRadius = "50%";
+                      div.style.width = "18px";
+                      div.style.height = "18px";
+                      div.style.border = "2px solid white";
+                      div.title = placeResult.name;
+                      return div;
+                    })(),
+                  });
+
+                  const infowindow = new google.maps.InfoWindow({
+                    content: `<strong>${placeResult.name}</strong><br>${
+                      placeResult.vicinity || ""
+                    }`,
+                  });
+
+                  marker.addListener?.("click", () => {
+                    infowindow.open(map, marker);
+                  });
+
+                  // Add to list
+                  const li = document.createElement("li");
+                  li.className = "border-b pb-2";
+                  li.innerHTML = `
+                    <div class="font-semibold">${placeResult.name}</div>
+                    <div class="text-sm text-gray-600">${
+                      placeResult.vicinity || "Address not available"
+                    }</div>
+                  `;
+                  li.addEventListener("click", () => {
+                    map.setCenter(placeResult.geometry.location);
+                    map.setZoom(16);
+                    infowindow.open(map, marker);
+                  });
+                  facilityList.appendChild(li);
+                });
+              }
+            }
+          );
+        },
+        () => {
+          alert("Geolocation failed. Showing default location.");
+        }
+      );
+    } else {
+      alert("Geolocation not supported by this browser.");
+    }
+  }
+</script>
+
+<!-- Google Maps API with Places Library -->
+<script
+  async
+  src="https://maps.googleapis.com/maps/api/js?key={{ api_key }}&libraries=places,marker&callback=initMap"
+></script>
+{% endblock %}

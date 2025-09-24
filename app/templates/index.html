@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mx-auto px-6 py-10">
+  <!-- Welcome -->
+  <h1 class="text-3xl font-bold mb-6">Hi, {{ current_user.username }}!</h1>
+
+  <!-- Posts Section -->
+  <div class="space-y-4 mb-10">
+    {% for post in posts %}
+      <div class="bg-white shadow rounded-lg p-4 border border-gray-200">
+        <p class="text-gray-700">
+          <span class="font-semibold text-purple-700">{{ post.author.username }}</span>
+          says:
+          <b>{{ post.body }}</b>
+        </p>
+      </div>
+    {% endfor %}
+  </div>
+
+  <!-- Feature Highlights -->
+  <section class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+    <!-- Chatbot -->
+    <div class="bg-white shadow-lg rounded-2xl p-6 hover:shadow-xl transition">
+      <h3 class="text-xl font-bold text-purple-700 mb-2">🤖 Ask Mama Care</h3>
+      <p class="text-gray-600 mb-4">
+        Chat with our assistant for personal health questions and guidance.
+      </p>
+      <a href="{{ url_for('chat') }}"
+         class="text-purple-700 font-semibold hover:underline">Try Chatbot →</a>
+    </div>
+
+    <!-- Facility Locator -->
+    <div class="bg-white shadow-lg rounded-2xl p-6 hover:shadow-xl transition">
+      <h3 class="text-xl font-bold text-purple-700 mb-2">🏥 Find Nearest Facility</h3>
+      <p class="text-gray-600 mb-4">
+        Locate hospitals and clinics closest to you with one click.
+      </p>
+      <a href="{{ url_for('facility_locator') }}"
+         class="text-purple-700 font-semibold hover:underline">Open Locator →</a>
+    </div>
+
+    <!-- Health Education -->
+    <div class="bg-white shadow-lg rounded-2xl p-6 hover:shadow-xl transition">
+      <h3 class="text-xl font-bold text-purple-700 mb-2">📘 Health Education</h3>
+      <p class="text-gray-600 mb-4">
+        Access trusted information on maternal and child health.
+      </p>
+      <a href="{{ url_for('maternal_child') }}"
+         class="text-purple-700 font-semibold hover:underline">Learn More →</a>
+    </div>
+
+    <!-- SHA Claims -->
+    <div class="bg-white shadow-lg rounded-2xl p-6 hover:shadow-xl transition">
+      <h3 class="text-xl font-bold text-purple-700 mb-2">📑 SHA Claims Guidance</h3>
+      <p class="text-gray-600 mb-4">
+        Understand your entitlements and how to make claims step-by-step.
+      </p>
+      <a href="{{ url_for('sha_claims') }}"
+         class="text-purple-700 font-semibold hover:underline">Get Guidance →</a>
+    </div>
+  </section>
+
+  <!-- Call-to-Action Section -->
+  <section class="bg-purple-700 text-white rounded-2xl shadow-lg p-10 text-center">
+    <h2 class="text-3xl font-bold mb-4">123. Start your journey to better care today</h2>
+    <p class="mb-6 text-lg">
+      Mama Care brings together health education, facility navigation, and support tools
+      designed to empower mothers and families.
+    </p>
+    <div class="flex justify-center space-x-4">
+      <a href="{{ url_for('facility_locator') }}"
+         class="bg-yellow-400 text-purple-900 font-semibold px-6 py-3 rounded-lg shadow hover:bg-yellow-300 transition">
+        Find Care Near You
+      </a>
+      {% if current_user.is_anonymous %}
+      <a href="{{ url_for('register') }}"
+         class="bg-white text-purple-700 font-semibold px-6 py-3 rounded-lg shadow hover:bg-gray-100 transition">
+        Register Now
+      </a>
+      {% endif %}
+    </div>
+  </section>
+</div>
+{% endblock %}

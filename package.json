@@ -1,0 +1,17 @@
+{
+  "name": "afyamkononi",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": " tailwindcss -i ./src/input.css -o ./app/static/css/style.css --watch",
+    "build": " tailwindcss -i ./src/input.css -o ./app/static/css/style.css --minify",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@tailwindcss/cli": "^4.1.13",
+    "tailwindcss": "^4.1.13"
+  }
+}
